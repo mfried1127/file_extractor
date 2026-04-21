@@ -1,1 +1,561 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Extractor</title>
+  <style>
+    :root {
+      --bg:        #F5F5F5;
+      --bg-warm:   #EDEBE7;
+      --earth:     #D8C3A5;
+      --grey:      #B2BEB5;
+      --green:     #6E8661;
+      --green-dk:  #556B4B;
+      --terracotta:#A05040;
+      --text:      #1A1714;
+      --muted:     #6B6560;
+      --rule:      #CEC9C2;
+      --font: 'Sweden Sans', 'Gill Sans MT', 'Gill Sans', Calibri, 'Trebuchet MS', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0 64px;
+    }
+
+    .annot {
+      padding-top: 68px;
+    }
+
+    .annot-label {
+      font-size: 11px;
+      letter-spacing: 0.09em;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .annot-label + .annot-label {
+      margin-top: 28px;
+    }
+
+    .annot-step {
+      display: block;
+      font-size: 32px;
+      font-weight: 300;
+      color: var(--earth);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .main {
+      padding-top: 60px;
+      padding-bottom: 100px;
+    }
+
+    .header {
+      padding-bottom: 44px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 52px;
+    }
+
+    .header h1 {
+      font-size: 44px;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.12;
+    }
+
+    .header h1 strong {
+      display: block;
+      font-weight: 700;
+    }
+
+    .header p {
+      margin-top: 18px;
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 460px;
+      line-height: 1.75;
+    }
+
+    .pickers {
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      gap: 20px;
+      margin-bottom: 52px;
+    }
+
+    .picker-card {
+      background: var(--bg-warm);
+      border: 1px solid var(--earth);
+      padding: 28px 26px 24px;
+    }
+
+    .picker-meta {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .picker-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      min-height: 26px;
+      margin-bottom: 18px;
+      word-break: break-all;
+      line-height: 1.4;
+    }
+
+    .picker-name.empty {
+      font-weight: 400;
+      font-style: italic;
+      color: var(--grey);
+    }
+
+    .picker-name.set::before {
+      content: '↳ ';
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .btn {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      padding: 9px 18px;
+      letter-spacing: 0.02em;
+      transition: background 0.12s;
+    }
+
+    .btn-dark {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .btn-dark:hover {
+      background: #3A3430;
+    }
+
+    .btn-extract {
+      background: var(--green);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 13px 36px;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-extract:hover:not(:disabled) {
+      background: var(--green-dk);
+    }
+
+    .btn-extract:disabled {
+      background: var(--grey);
+      cursor: not-allowed;
+    }
+
+    .rule-line {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 48px 0;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .action-note {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .progress-wrap {
+      margin-top: 36px;
+    }
+
+    .progress-caption {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .progress-track {
+      height: 2px;
+      background: var(--earth);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--green);
+      width: 0%;
+      transition: width 0.18s ease;
+    }
+
+    .progress-tally {
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--text);
+      margin-top: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .progress-tally span {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0;
+      margin-left: 6px;
+    }
+
+    .status-box {
+      margin-top: 36px;
+      padding: 24px 26px;
+      border-left: 3px solid var(--green);
+      background: var(--bg-warm);
+    }
+
+    .status-box.is-error {
+      border-left-color: var(--terracotta);
+    }
+
+    .status-headline {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+
+    .status-detail {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .error-list {
+      margin-top: 16px;
+      list-style: none;
+      font-size: 13px;
+      color: var(--terracotta);
+      line-height: 1.65;
+    }
+
+    .error-list li::before {
+      content: '— ';
+    }
+
+    .compat-warn {
+      margin-top: 36px;
+      padding: 20px 24px;
+      border-left: 3px solid var(--earth);
+      background: var(--bg-warm);
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .compat-warn strong {
+      display: block;
+      color: var(--text);
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 680px) {
+      .page { grid-template-columns: 1fr; padding: 0 20px; }
+      .annot { display: none; }
+      .pickers { grid-template-columns: 1fr; }
+      .header h1 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <aside class="annot">
+    <div class="annot-label">
+      <em class="annot-step">01</em>
+      Choose<br>source folder
+    </div>
+    <div class="annot-label">
+      <em class="annot-step">02</em>
+      Choose<br>destination
+    </div>
+    <div class="annot-label">
+      <em class="annot-step">03</em>
+      Extract
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <header class="header">
+      <h1>
+        Copy files
+        <strong>across folders.</strong>
+      </h1>
+      <p>
+        Select a source and a destination folder. All files — including those
+        inside subfolders — will be copied over with their folder structure intact.
+      </p>
+    </header>
+
+    <div class="pickers">
+      <div class="picker-card">
+        <div class="picker-meta">Source</div>
+        <div class="picker-name empty" id="source-name">No folder selected</div>
+        <button class="btn btn-dark" onclick="selectFolder('source')">Select source folder</button>
+      </div>
+
+      <div class="picker-card">
+        <div class="picker-meta">Destination</div>
+        <div class="picker-name empty" id="dest-name">No folder selected</div>
+        <button class="btn btn-dark" onclick="selectFolder('destination')">Select destination folder</button>
+      </div>
+    </div>
+
+    <hr class="rule-line">
+
+    <div class="action-row">
+      <button class="btn btn-extract" id="extract-btn" disabled onclick="runExtraction()">
+        Extract files
+      </button>
+      <p class="action-note" id="action-note">Select both folders to continue.</p>
+    </div>
+
+    <div class="progress-wrap hidden" id="progress-wrap">
+      <p class="progress-caption" id="progress-caption">Scanning…</p>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-tally" id="progress-tally"></div>
+    </div>
+
+    <div class="status-box hidden" id="status-box">
+      <div class="status-headline" id="status-headline"></div>
+      <div class="status-detail"   id="status-detail"></div>
+      <ul class="error-list hidden" id="error-list"></ul>
+    </div>
+
+    <div class="compat-warn hidden" id="compat-warn">
+      <strong>Browser not supported</strong>
+      The File System Access API is required. Please use Chrome or Edge 86+.
+    </div>
+
+  </main>
+</div>
+
+<script>
+  'use strict';
+
+  let sourceHandle = null;
+  let destHandle   = null;
+
+  if (typeof window.showDirectoryPicker !== 'function') {
+    document.getElementById('compat-warn').classList.remove('hidden');
+    document.getElementById('extract-btn').disabled = true;
+  }
+
+  async function selectFolder(which) {
+    const isSource = which === 'source';
+    try {
+      const handle = await window.showDirectoryPicker({
+        id:   which,
+        mode: isSource ? 'read' : 'readwrite',
+      });
+      if (isSource) {
+        sourceHandle = handle;
+        setPickerName('source-name', handle.name);
+      } else {
+        destHandle = handle;
+        setPickerName('dest-name', handle.name);
+      }
+    } catch (e) {
+      if (e.name !== 'AbortError') {
+        showStatus('Could not open folder', e.message, [], true);
+      }
+      return;
+    }
+    refreshUI();
+  }
+
+  function setPickerName(id, name) {
+    const el = document.getElementById(id);
+    el.textContent = name;
+    el.classList.remove('empty');
+    el.classList.add('set');
+  }
+
+  function refreshUI() {
+    const ready = sourceHandle && destHandle;
+    document.getElementById('extract-btn').disabled = !ready;
+    document.getElementById('action-note').textContent = ready
+      ? `"${sourceHandle.name}" → "${destHandle.name}"`
+      : 'Select both folders to continue.';
+  }
+
+  async function collectFiles(dirHandle, relativePath) {
+    const results = [];
+    for await (const [name, handle] of dirHandle.entries()) {
+      const entryPath = relativePath ? `${relativePath}/${name}` : name;
+      if (handle.kind === 'file') {
+        results.push({ path: entryPath, handle });
+      } else if (handle.kind === 'directory') {
+        const sub = await collectFiles(handle, entryPath);
+        results.push(...sub);
+      }
+    }
+    return results;
+  }
+
+  async function ensureDir(rootHandle, pathSegments) {
+    let current = rootHandle;
+    for (const segment of pathSegments) {
+      current = await current.getDirectoryHandle(segment, { create: true });
+    }
+    return current;
+  }
+
+  async function copyFile(fileHandle, pathInDest) {
+    const parts    = pathInDest.split('/');
+    const fileName = parts.pop();
+    const dir      = parts.length ? await ensureDir(destHandle, parts) : destHandle;
+
+    const destFileHandle = await dir.getFileHandle(fileName, { create: true });
+    const writable       = await destFileHandle.createWritable();
+    const file           = await fileHandle.getFile();
+    await writable.write(file);
+    await writable.close();
+  }
+
+  async function runExtraction() {
+    const btn = document.getElementById('extract-btn');
+    btn.disabled = true;
+
+    hideElement('status-box');
+    showElement('progress-wrap');
+    setProgress(0, 0, 0, 'Scanning files…');
+
+    let files;
+    try {
+      files = await collectFiles(sourceHandle, '');
+    } catch (e) {
+      hideElement('progress-wrap');
+      showStatus('Scan failed', e.message, [], true);
+      btn.disabled = false;
+      refreshUI();
+      return;
+    }
+
+    const total = files.length;
+
+    if (total === 0) {
+      hideElement('progress-wrap');
+      showStatus('Nothing to copy', 'The source folder contains no files.', [], false);
+      btn.disabled = false;
+      refreshUI();
+      return;
+    }
+
+    setProgress(0, 0, total, `Copying ${total} file${total !== 1 ? 's' : ''}…`);
+
+    let copied = 0;
+    const errors = [];
+
+    for (const { path, handle } of files) {
+      try {
+        await copyFile(handle, path);
+        copied++;
+      } catch (e) {
+        errors.push(`${path}: ${e.message}`);
+      }
+      setProgress(copied + errors.length, copied, total);
+    }
+
+    hideElement('progress-wrap');
+
+    const hasErrors = errors.length > 0;
+    const headline  = hasErrors
+      ? `${copied} of ${total} files extracted.`
+      : `${copied} file${copied !== 1 ? 's' : ''} extracted.`;
+    const detail = hasErrors
+      ? `${errors.length} file${errors.length !== 1 ? 's' : ''} failed — see details below.`
+      : `All files copied successfully into "${destHandle.name}".`;
+
+    showStatus(headline, detail, errors, hasErrors && copied === 0);
+
+    btn.disabled = false;
+    refreshUI();
+  }
+
+  function setProgress(done, copied, total, caption) {
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+
+    if (caption) {
+      document.getElementById('progress-caption').textContent = caption;
+    }
+    if (total > 0) {
+      const tally = document.getElementById('progress-tally');
+      tally.innerHTML = `${copied}<span>of ${total} copied</span>`;
+    }
+  }
+
+  function showStatus(headline, detail, errors = [], isError = false) {
+    const box = document.getElementById('status-box');
+    box.classList.toggle('is-error', isError);
+    box.classList.remove('hidden');
+
+    document.getElementById('status-headline').textContent = headline;
+    document.getElementById('status-detail').textContent   = detail;
+
+    const list = document.getElementById('error-list');
+    if (errors.length > 0) {
+      list.innerHTML = '';
+      const cap = 25;
+      errors.slice(0, cap).forEach(msg => {
+        const li = document.createElement('li');
+        li.textContent = msg;
+        list.appendChild(li);
+      });
+      if (errors.length > cap) {
+        const li = document.createElement('li');
+        li.textContent = `…and ${errors.length - cap} more`;
+        list.appendChild(li);
+      }
+      list.classList.remove('hidden');
+    } else {
+      list.classList.add('hidden');
+    }
+  }
+
+  function showElement(id) { document.getElementById(id).classList.remove('hidden'); }
+  function hideElement(id) { document.getElementById(id).classList.add('hidden'); }
+</script>
+</body>
+</html>

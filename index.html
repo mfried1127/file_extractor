@@ -39,9 +39,8 @@
       gap: 0 64px;
     }
 
-    .annot {
-      padding-top: 68px;
-    }
+    /* ── Annotation column ── */
+    .annot { padding-top: 68px; }
 
     .annot-label {
       font-size: 11px;
@@ -50,9 +49,7 @@
       line-height: 1.9;
     }
 
-    .annot-label + .annot-label {
-      margin-top: 28px;
-    }
+    .annot-label + .annot-label { margin-top: 28px; }
 
     .annot-step {
       display: block;
@@ -63,11 +60,15 @@
       margin-bottom: 4px;
     }
 
+    .annot-step.active { color: var(--green); }
+
+    /* ── Main ── */
     .main {
       padding-top: 60px;
       padding-bottom: 100px;
     }
 
+    /* ── Header ── */
     .header {
       padding-bottom: 44px;
       border-bottom: 1px solid var(--rule);
@@ -77,7 +78,6 @@
     .header h1 {
       font-size: 44px;
       font-weight: 300;
-      color: var(--text);
       line-height: 1.12;
     }
 
@@ -94,6 +94,7 @@
       line-height: 1.75;
     }
 
+    /* ── Folder pickers ── */
     .pickers {
       display: grid;
       grid-template-columns: 5fr 4fr;
@@ -137,6 +138,7 @@
       font-style: normal;
     }
 
+    /* ── Buttons ── */
     .btn {
       font-family: var(--font);
       font-size: 13px;
@@ -153,9 +155,15 @@
       color: var(--bg);
     }
 
-    .btn-dark:hover {
-      background: #3A3430;
+    .btn-dark:hover { background: #3A3430; }
+
+    .btn-muted {
+      background: var(--bg-warm);
+      color: var(--muted);
+      border: 1px solid var(--rule);
     }
+
+    .btn-muted:hover { background: var(--earth); color: var(--text); }
 
     .btn-extract {
       background: var(--green);
@@ -163,24 +171,126 @@
       font-size: 15px;
       font-weight: 700;
       padding: 13px 36px;
-      letter-spacing: 0.01em;
     }
 
-    .btn-extract:hover:not(:disabled) {
-      background: var(--green-dk);
-    }
+    .btn-extract:hover:not(:disabled) { background: var(--green-dk); }
 
     .btn-extract:disabled {
       background: var(--grey);
       cursor: not-allowed;
     }
 
+    /* ── Rule ── */
     .rule-line {
       border: none;
       border-top: 1px solid var(--rule);
       margin: 48px 0;
     }
 
+    /* ── File selection panel ── */
+    .file-panel {
+      margin-bottom: 48px;
+    }
+
+    .file-panel-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .file-panel-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .file-panel-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .file-panel-controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    /* ── File list ── */
+    .file-list {
+      border: 1px solid var(--earth);
+      background: #fff;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--bg-warm);
+      cursor: pointer;
+      transition: background 0.08s;
+    }
+
+    .file-item:last-child { border-bottom: none; }
+    .file-item:hover { background: var(--bg-warm); }
+
+    /* Custom checkbox */
+    .file-check {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid var(--grey);
+      background: #fff;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+      transition: border-color 0.1s, background 0.1s;
+    }
+
+    .file-check:checked {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .file-check:checked::after {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 0px;
+      width: 5px;
+      height: 9px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .file-item-path {
+      font-size: 12px;
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .file-item-name {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .file-scanning {
+      padding: 20px 14px;
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* ── Action row ── */
     .action-row {
       display: flex;
       align-items: center;
@@ -193,9 +303,8 @@
       font-style: italic;
     }
 
-    .progress-wrap {
-      margin-top: 36px;
-    }
+    /* ── Progress ── */
+    .progress-wrap { margin-top: 36px; }
 
     .progress-caption {
       font-size: 13px;
@@ -203,10 +312,7 @@
       margin-bottom: 10px;
     }
 
-    .progress-track {
-      height: 2px;
-      background: var(--earth);
-    }
+    .progress-track { height: 2px; background: var(--earth); }
 
     .progress-fill {
       height: 100%;
@@ -249,14 +355,10 @@
       text-overflow: ellipsis;
     }
 
-    .file-log-entry.done {
-      color: var(--green);
-    }
+    .file-log-entry.done  { color: var(--green); }
+    .file-log-entry.fail  { color: var(--terracotta); }
 
-    .file-log-entry.fail {
-      color: var(--terracotta);
-    }
-
+    /* ── Status ── */
     .status-box {
       margin-top: 36px;
       padding: 24px 26px;
@@ -264,9 +366,7 @@
       background: var(--bg-warm);
     }
 
-    .status-box.is-error {
-      border-left-color: var(--terracotta);
-    }
+    .status-box.is-error { border-left-color: var(--terracotta); }
 
     .status-headline {
       font-size: 20px;
@@ -275,10 +375,7 @@
       margin-bottom: 5px;
     }
 
-    .status-detail {
-      font-size: 14px;
-      color: var(--muted);
-    }
+    .status-detail { font-size: 14px; color: var(--muted); }
 
     .error-list {
       margin-top: 16px;
@@ -288,10 +385,9 @@
       line-height: 1.65;
     }
 
-    .error-list li::before {
-      content: '— ';
-    }
+    .error-list li::before { content: '— '; }
 
+    /* ── Compat warning ── */
     .compat-warn {
       margin-top: 36px;
       padding: 20px 24px;
@@ -324,15 +420,19 @@
 
   <aside class="annot">
     <div class="annot-label">
-      <em class="annot-step">01</em>
+      <em class="annot-step" id="step1-num">01</em>
       Choose<br>source folder
     </div>
     <div class="annot-label">
-      <em class="annot-step">02</em>
+      <em class="annot-step" id="step2-num">02</em>
+      Select<br>files
+    </div>
+    <div class="annot-label">
+      <em class="annot-step" id="step3-num">03</em>
       Choose<br>destination
     </div>
     <div class="annot-label">
-      <em class="annot-step">03</em>
+      <em class="annot-step" id="step4-num">04</em>
       Extract
     </div>
   </aside>
@@ -345,11 +445,12 @@
         <strong>across folders.</strong>
       </h1>
       <p>
-        Select a source and a destination folder. All files — including those
-        inside subfolders — will be copied over with their folder structure intact.
+        Choose a source folder, pick the files you want, then choose a destination
+        and extract.
       </p>
     </header>
 
+    <!-- Step 1 & 3: Folder pickers -->
     <div class="pickers">
       <div class="picker-card">
         <div class="picker-meta">Source</div>
@@ -364,8 +465,28 @@
       </div>
     </div>
 
+    <!-- Step 2: File selection (appears after source is picked) -->
+    <div class="file-panel hidden" id="file-panel">
+      <hr class="rule-line" style="margin-top:0">
+
+      <div class="file-panel-header">
+        <span class="file-panel-title">Files in source folder</span>
+        <span class="file-panel-meta" id="selection-count"></span>
+      </div>
+
+      <div class="file-panel-controls">
+        <button class="btn btn-muted" onclick="selectAll(true)">Select all</button>
+        <button class="btn btn-muted" onclick="selectAll(false)">Deselect all</button>
+      </div>
+
+      <div class="file-list" id="file-list">
+        <div class="file-scanning">Scanning…</div>
+      </div>
+    </div>
+
     <hr class="rule-line">
 
+    <!-- Step 4: Extract -->
     <div class="action-row">
       <button class="btn btn-extract" id="extract-btn" disabled onclick="runExtraction()">
         Extract files
@@ -373,6 +494,7 @@
       <p class="action-note" id="action-note">Select both folders to continue.</p>
     </div>
 
+    <!-- Progress -->
     <div class="progress-wrap hidden" id="progress-wrap">
       <p class="progress-caption" id="progress-caption">Scanning…</p>
       <div class="progress-track">
@@ -382,12 +504,14 @@
       <div class="file-log" id="file-log"></div>
     </div>
 
+    <!-- Result -->
     <div class="status-box hidden" id="status-box">
       <div class="status-headline" id="status-headline"></div>
       <div class="status-detail"   id="status-detail"></div>
       <ul class="error-list hidden" id="error-list"></ul>
     </div>
 
+    <!-- Browser compat warning -->
     <div class="compat-warn hidden" id="compat-warn">
       <strong>Browser not supported</strong>
       The File System Access API is required. Please use Chrome or Edge 86+.
@@ -401,12 +525,14 @@
 
   let sourceHandle = null;
   let destHandle   = null;
+  let allFiles     = [];   // { path, handle } for every file in source
 
   if (typeof window.showDirectoryPicker !== 'function') {
     document.getElementById('compat-warn').classList.remove('hidden');
     document.getElementById('extract-btn').disabled = true;
   }
 
+  // ── Folder selection ───────────────────────────────────────────────────────
   async function selectFolder(which) {
     const isSource = which === 'source';
     try {
@@ -417,6 +543,7 @@
       if (isSource) {
         sourceHandle = handle;
         setPickerName('source-name', handle.name);
+        await loadFileList();
       } else {
         destHandle = handle;
         setPickerName('dest-name', handle.name);
@@ -437,14 +564,98 @@
     el.classList.add('set');
   }
 
-  function refreshUI() {
-    const ready = sourceHandle && destHandle;
-    document.getElementById('extract-btn').disabled = !ready;
-    document.getElementById('action-note').textContent = ready
-      ? `"${sourceHandle.name}" → "${destHandle.name}"`
-      : 'Select both folders to continue.';
+  // ── File list loading ──────────────────────────────────────────────────────
+  async function loadFileList() {
+    showElement('file-panel');
+    const listEl = document.getElementById('file-list');
+    listEl.innerHTML = '<div class="file-scanning">Scanning…</div>';
+    allFiles = [];
+
+    try {
+      allFiles = await collectFiles(sourceHandle, '');
+    } catch (e) {
+      listEl.innerHTML = '<div class="file-scanning">Could not read folder: ' + e.message + '</div>';
+      return;
+    }
+
+    if (allFiles.length === 0) {
+      listEl.innerHTML = '<div class="file-scanning">No files found in this folder.</div>';
+      updateSelectionCount();
+      return;
+    }
+
+    renderFileList(listEl);
+    updateSelectionCount();
   }
 
+  function renderFileList(listEl) {
+    listEl.innerHTML = '';
+    allFiles.forEach((f, i) => {
+      const parts    = f.path.split('/');
+      const fileName = parts.pop();
+      const folder   = parts.join('/');
+
+      const item = document.createElement('label');
+      item.className = 'file-item';
+
+      const cb = document.createElement('input');
+      cb.type      = 'checkbox';
+      cb.className = 'file-check';
+      cb.checked   = true;
+      cb.dataset.index = i;
+      cb.addEventListener('change', updateSelectionCount);
+
+      const pathSpan = document.createElement('span');
+      pathSpan.className = 'file-item-path';
+      pathSpan.innerHTML = folder
+        ? `<span style="opacity:.6">${folder}/</span><span class="file-item-name">${fileName}</span>`
+        : `<span class="file-item-name">${fileName}</span>`;
+
+      item.appendChild(cb);
+      item.appendChild(pathSpan);
+      listEl.appendChild(item);
+    });
+  }
+
+  function selectAll(checked) {
+    document.querySelectorAll('.file-check').forEach(cb => cb.checked = checked);
+    updateSelectionCount();
+  }
+
+  function updateSelectionCount() {
+    const checkboxes = document.querySelectorAll('.file-check');
+    const total    = checkboxes.length;
+    const selected = [...checkboxes].filter(cb => cb.checked).length;
+    document.getElementById('selection-count').textContent =
+      total > 0 ? `${selected} of ${total} selected` : '';
+    refreshUI();
+  }
+
+  function getSelectedFiles() {
+    return [...document.querySelectorAll('.file-check')]
+      .filter(cb => cb.checked)
+      .map(cb => allFiles[parseInt(cb.dataset.index)]);
+  }
+
+  // ── UI state ───────────────────────────────────────────────────────────────
+  function refreshUI() {
+    const selected = getSelectedFiles();
+    const ready    = sourceHandle && destHandle && selected.length > 0;
+    document.getElementById('extract-btn').disabled = !ready;
+
+    if (!sourceHandle) {
+      document.getElementById('action-note').textContent = 'Select both folders to continue.';
+    } else if (!destHandle) {
+      document.getElementById('action-note').textContent = 'Now select a destination folder.';
+    } else if (selected.length === 0) {
+      document.getElementById('action-note').textContent = 'Select at least one file.';
+    } else {
+      document.getElementById('action-note').textContent =
+        `${selected.length} file${selected.length !== 1 ? 's' : ''} → "${destHandle.name}"`;
+    }
+  }
+
+  // ── Recursive file collection ──────────────────────────────────────────────
   async function collectFiles(dirHandle, relativePath) {
     const results = [];
     for await (const [name, handle] of dirHandle.entries()) {
@@ -459,6 +670,7 @@
     return results;
   }
 
+  // ── Directory creation ─────────────────────────────────────────────────────
   async function ensureDir(rootHandle, pathSegments) {
     let current = rootHandle;
     for (const segment of pathSegments) {
@@ -467,6 +679,7 @@
     return current;
   }
 
+  // ── Copy one file ──────────────────────────────────────────────────────────
   async function copyFile(fileHandle, pathInDest) {
     const parts    = pathInDest.split('/');
     const fileName = parts.pop();
@@ -479,42 +692,21 @@
     await writable.close();
   }
 
+  // ── Extraction ─────────────────────────────────────────────────────────────
   async function runExtraction() {
-    const btn = document.getElementById('extract-btn');
+    const btn   = document.getElementById('extract-btn');
+    const files = getSelectedFiles();
     btn.disabled = true;
 
     hideElement('status-box');
     showElement('progress-wrap');
-    setProgress(0, 0, 0, 'Scanning files…');
-
-    let files;
-    try {
-      files = await collectFiles(sourceHandle, '');
-    } catch (e) {
-      hideElement('progress-wrap');
-      showStatus('Scan failed', e.message, [], true);
-      btn.disabled = false;
-      refreshUI();
-      return;
-    }
-
-    const total = files.length;
-
-    if (total === 0) {
-      hideElement('progress-wrap');
-      showStatus('Nothing to copy', 'The source folder contains no files.', [], false);
-      btn.disabled = false;
-      refreshUI();
-      return;
-    }
-
-    setProgress(0, 0, total, `Copying ${total} file${total !== 1 ? 's' : ''}…`);
-
-    let copied = 0;
-    const errors = [];
+    setProgress(0, 0, files.length, `Copying ${files.length} file${files.length !== 1 ? 's' : ''}…`);
 
     const log = document.getElementById('file-log');
     log.innerHTML = '';
+
+    let copied = 0;
+    const errors = [];
 
     for (const { path, handle } of files) {
       try {
@@ -525,35 +717,32 @@
         errors.push(`${path}: ${e.message}`);
         addLogEntry(log, '✗ ' + path, 'fail');
       }
-      setProgress(copied + errors.length, copied, total);
+      setProgress(copied + errors.length, copied, files.length);
     }
 
     hideElement('progress-wrap');
 
     const hasErrors = errors.length > 0;
     const headline  = hasErrors
-      ? `${copied} of ${total} files extracted.`
+      ? `${copied} of ${files.length} files extracted.`
       : `${copied} file${copied !== 1 ? 's' : ''} extracted.`;
     const detail = hasErrors
       ? `${errors.length} file${errors.length !== 1 ? 's' : ''} failed — see details below.`
       : `All files copied successfully into "${destHandle.name}".`;
 
     showStatus(headline, detail, errors, hasErrors && copied === 0);
-
     btn.disabled = false;
     refreshUI();
   }
 
+  // ── UI helpers ─────────────────────────────────────────────────────────────
   function setProgress(done, copied, total, caption) {
     const pct = total > 0 ? Math.round((done / total) * 100) : 0;
     document.getElementById('progress-fill').style.width = pct + '%';
-
-    if (caption) {
-      document.getElementById('progress-caption').textContent = caption;
-    }
+    if (caption) document.getElementById('progress-caption').textContent = caption;
     if (total > 0) {
-      const tally = document.getElementById('progress-tally');
-      tally.innerHTML = `${copied}<span>of ${total} copied</span>`;
+      document.getElementById('progress-tally').innerHTML =
+        `${copied}<span>of ${total} copied</span>`;
     }
   }
 
@@ -561,22 +750,20 @@
     const box = document.getElementById('status-box');
     box.classList.toggle('is-error', isError);
     box.classList.remove('hidden');
-
     document.getElementById('status-headline').textContent = headline;
     document.getElementById('status-detail').textContent   = detail;
 
     const list = document.getElementById('error-list');
     if (errors.length > 0) {
       list.innerHTML = '';
-      const cap = 25;
-      errors.slice(0, cap).forEach(msg => {
+      errors.slice(0, 25).forEach(msg => {
         const li = document.createElement('li');
         li.textContent = msg;
         list.appendChild(li);
       });
-      if (errors.length > cap) {
+      if (errors.length > 25) {
         const li = document.createElement('li');
-        li.textContent = `…and ${errors.length - cap} more`;
+        li.textContent = `…and ${errors.length - 25} more`;
         list.appendChild(li);
       }
       list.classList.remove('hidden');
